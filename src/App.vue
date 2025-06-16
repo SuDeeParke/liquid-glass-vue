@@ -15,6 +15,8 @@ const testParam = reactive({
   mode: "standard",
   aberrationIntensity: 2,
   displacementScale: 24,
+  blurAmount: 1,
+  saturation: 100
 })
 
 onMounted(() => {
@@ -24,6 +26,8 @@ onMounted(() => {
   folder.add(testParam, 'mode', ["standard", "polar", "prominent", "shader"]);
   folder.add(testParam, 'aberrationIntensity', 0, 10);
   folder.add(testParam, 'displacementScale', 0, 100);
+  folder.add(testParam, 'blurAmount', 0, 20);
+  folder.add(testParam, 'saturation', 0, 200);
   folder.open();
 })
 
@@ -41,7 +45,9 @@ onBeforeUnmount(() => {
       :width="testParam.width"
       :height="testParam.height"
       :aberrationIntensity="testParam.aberrationIntensity"
-      :displacementScale="testParam.displacementScale"></LiquidSVG>
+      :displacementScale="testParam.displacementScale"
+      :blurAmount="testParam.blurAmount"
+      :saturation="testParam.saturation"></LiquidSVG>
   </div>
 
 </template>

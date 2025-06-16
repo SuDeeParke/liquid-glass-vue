@@ -32,9 +32,10 @@ const props = withDefaults(defineProps<LiquidGlassProps>(), {
   height: 300,
   mode: 'standard',
   aberrationIntensity: 2,
-  displacementScale: 25
+  displacementScale: 25,
+  blurAmount: 0,
+  saturation: 120,
 });
-
 
 
 const overlayRef = ref<any>(null)
@@ -43,12 +44,14 @@ const height = computed(() => props.height ?? 300);
 const aberrationIntensity = computed(() => props.aberrationIntensity ?? 2);
 const displacementScale = computed(() => props.displacementScale ?? 25)
 const mode = computed(() => props.mode ?? 'standard');
+const blurAmount = computed(() => props.blurAmount ?? 0);
+const saturation = computed(() => props.saturation ?? 120);
 const shaderMapUrl = ref(undefined)
 const filterKey = ref(0);
 watch(
   () => [displacementScale.value, mode.value, aberrationIntensity.value],
   () => {
-    filterKey.value += 1; // 强制更新 filter
+    filterKey.value += 1;
   }
 );
 const id = computed(() => `$lquidGlass_${filterKey.value}`)
@@ -157,7 +160,7 @@ const getMap = (mode: Mode, shaderMapUrl?: string) => {
     </defs>
   </svg>
   <div class="overlay"
-    :style="{ width: `${width}px`, height: `${height}px`, backdropFilter: `url(#${id}) blur(1px) saturate(120%)` }"
+    :style="{ width: `${width}px`, height: `${height}px`, backdropFilter: `url(#${id}) blur(${blurAmount}px) saturate(${saturation}%)` }"
     ref="overlayRef"></div>
 </template>
 
