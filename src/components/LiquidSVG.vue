@@ -5,19 +5,55 @@
   @Last Modified time: 2025-06-16 09:48:02
 -->
 <script setup lang="ts">
-import { displacementMap, polarDisplacementMap, prominentDisplacementMap } from "../lib/utils.ts"
-import { ref, onMounted } from 'vue'
+import { displacementMap, polarDisplacementMap, prominentDisplacementMap, } from "../lib/utils.ts"
+import { ref, computed, watch } from 'vue'
+
+type Mode = "standard" | "polar" | "prominent" | "shader";
+interface LiquidGlassProps {
+  width?: number,
+  height?: number,
+  displacementScale?: number
+  blurAmount?: number
+  saturation?: number
+  aberrationIntensity?: number
+  elasticity?: number
+  cornerRadius?: number
+  globalMousePos?: { x: number; y: number }
+  mouseOffset?: { x: number; y: number }
+  className?: string
+  padding?: string
+  overLight?: boolean
+  mode?: Mode
+  onClick?: () => void
+}
+
+const props = withDefaults(defineProps<LiquidGlassProps>(), {
+  width: 300,
+  height: 300,
+  mode: 'standard',
+  aberrationIntensity: 2,
+  displacementScale: 25
+});
+
+
 
 const overlayRef = ref<any>(null)
-const id = ref('liquidGlass');
-const width = ref(300);
-const height = ref(300);
-const aberrationIntensity = ref(2);
-const displacementScale = ref(25)
-const mode = ref<"standard" | "polar" | "prominent" | "shader">('standard')
+const width = computed(() => props.width ?? 300);
+const height = computed(() => props.height ?? 300);
+const aberrationIntensity = computed(() => props.aberrationIntensity ?? 2);
+const displacementScale = computed(() => props.displacementScale ?? 25)
+const mode = computed(() => props.mode ?? 'standard');
 const shaderMapUrl = ref(undefined)
+const filterKey = ref(0);
+watch(
+  () => [displacementScale.value, mode.value, aberrationIntensity.value],
+  () => {
+    filterKey.value += 1; // 强制更新 filter
+  }
+);
+const id = computed(() => `$lquidGlass_${filterKey.value}`)
 
-const getMap = (mode: "standard" | "polar" | "prominent" | "shader", shaderMapUrl?: string) => {
+const getMap = (mode: Mode, shaderMapUrl?: string) => {
   switch (mode) {
     case "standard":
       return displacementMap
@@ -31,21 +67,7 @@ const getMap = (mode: "standard" | "polar" | "prominent" | "shader", shaderMapUr
       throw new Error(`Invalid mode: ${mode}`)
   }
 }
-const onMouseMove = (e) => {
-  const overlay = overlayRef.value
-  if (!overlay) return
 
-  // 获取鼠标位置
-  const x = e.clientX
-  const y = e.clientY
-
-  // 设置元素位置，使鼠标位于中心点（-150 是宽度/高度的一半）
-  overlay.style.transform = `translate(${x - 150}px, ${y - 150}px)`
-}
-
-onMounted(() => {
-  window.addEventListener('mousemove', onMouseMove)
-})
 </script>
 
 <template>
@@ -56,7 +78,7 @@ onMounted(() => {
         <stop :offset="`${Math.max(30, 80 - aberrationIntensity * 2)}%`" stopColor="black" stopOpacity="0" />
         <stop offset="100%" stopColor="white" stopOpacity="1" />
       </radialGradient>
-      <filter :id="id" x="-35%" y="-35%" width="170%" height="170%" colorInterpolationFilters="sRGB">
+      <filter :key="filterKey" :id="id" x="-35%" y="-35%" width="170%" height="170%" colorInterpolationFilters="sRGB">
         <feImage id="feimage" x="0" y="0" width="100%" height="100%" result="DISPLACEMENT_MAP" :href="getMap(mode,
           shaderMapUrl)" preserveAspectRatio="xMidYMid slice" />
 
@@ -134,24 +156,25 @@ onMounted(() => {
       </filter>
     </defs>
   </svg>
-  <div class="overlay" ref="overlayRef"></div>
+  <div class="overlay"
+    :style="{ width: `${width}px`, height: `${height}px`, backdropFilter: `url(#${id}) blur(1px) saturate(120%)` }"
+    ref="overlayRef"></div>
 </template>
 
 
 
 <style scoped>
 .overlay {
-  position: absolute;
+  position: relative;
   top: 0;
   left: 0;
   width: 300px;
   height: 300px;
-  backdrop-filter: url(#liquidGlass) blur(1px) saturate(120%);
   box-shadow:
     0 8px 32px rgba(104, 104, 104, 0.1),
     inset 0 10px 10px rgba(255, 255, 255, 0.4);
   border-left: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 100%;
+  border-radius: 20px;
   margin: 0 20px;
 }
 </style>
