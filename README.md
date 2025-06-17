@@ -2,6 +2,10 @@
 
 一个基于 Vue 实现液态玻璃效果的 demo. 灵感来源于 [liquid-glass-react](https://github.com/rdev/liquid-glass-react)。
 
+![Liquid Glass Demo 1](./demo/move.gif)
+
+![Liquid Glass Demo 1](./demo/params.gif)
+
 ## 🌟 功能特点
 
 - 使用 Vue 实现液态玻璃效果
@@ -35,13 +39,13 @@
 
    ```vue
    <script setup>
-     import LiquidSVG from './components/liquidSVG/index.vue'
+   import LiquidSVG from './components/liquidSVG/index.vue'
    </script>
 
    <template>
-     <div id="app">
-       <liquidSVG />
-     </div>
+   	<div id="app">
+   		<liquidSVG />
+   	</div>
    </template>
    ```
 
