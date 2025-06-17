@@ -184,6 +184,6 @@ const getMap = (mode: Mode, shaderMapUrl?: string) => {
     inset 0 10px 10px rgba(255, 255, 255, 0.4);
   border-left: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 20px;
-  margin: 0 20px;
+  margin: 0;
 }
 </style>
