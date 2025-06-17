@@ -6,7 +6,7 @@
 -->
 <script setup>
 import { onBeforeUnmount, onMounted, reactive, ref } from 'vue';
-import LiquidSVG from './components/LiquidSVG.vue';
+import LiquidSVG from './components/liquidSVG/index.vue';
 import * as dat from 'dat.gui';
 
 

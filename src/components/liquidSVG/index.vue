@@ -5,7 +5,7 @@
   @Last Modified time: 2025-06-16 09:48:02
 -->
 <script setup lang="ts">
-import { displacementMap, polarDisplacementMap, prominentDisplacementMap, } from "../lib/utils.ts"
+import { displacementMap, polarDisplacementMap, prominentDisplacementMap, } from "./lib/utils.ts"
 import { ref, computed, watch } from 'vue'
 
 type Mode = "standard" | "polar" | "prominent" | "shader";
