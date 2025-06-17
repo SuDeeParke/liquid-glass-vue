@@ -35,13 +35,13 @@
 
    ```vue
    <script setup>
-   import LiquidSVG from './components/liquidSVG/index.vue'
+     import LiquidSVG from './components/liquidSVG/index.vue'
    </script>
 
    <template>
-   	<div id="app">
-   		<liquidSVG />
-   	</div>
+     <div id="app">
+       <liquidSVG />
+     </div>
    </template>
    ```
 
